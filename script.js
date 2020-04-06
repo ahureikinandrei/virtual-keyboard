@@ -7,12 +7,13 @@ const Keyboard = {
     },
 
     eventHandlers: {
-        oninput: null,
+        oninput: null
     },
 
     properties: {
         value: "",
-        capsLock: false
+        capsLock: false,
+        language: "english"
     },
 
     init(language) {
@@ -37,18 +38,19 @@ const Keyboard = {
                 });
     },
 
-    init2() {
+    _removeMain() {
         this.elements.main.remove();
+        this.elements.textArea.remove();
     },
 
     _createKeys(language) {
         const fragment = document.createDocumentFragment();
         if (language === 'russian') {
-            keyLayout = ['`', '1', "2", "3", "4", "5", "6", "7", "8", "9", "0", "-", "=", 'Backspace',
+            keyLayout = ['ё', '1', "2", "3", "4", "5", "6", "7", "8", "9", "0", "-", "=", 'Backspace',
         'Tab', "й", "ц", "у", "к", "е", "н", "г", "ш", "щ", "з", "х", "ъ", "\\", 'Delete',
         'CapsLock', "ф", "ы", "в", "а", "п", "р", "о", "л", "д", "ж", "э", 'Enter',
         "Shift", "я", "ч", "с", "м", "и", "т", "ь", "б", "ю", ".", "ShiftRt",
-        "Control", "fn", "Alt", "Space", "Alt", "fn", "Control"
+        "Control", "ln", "Alt", "Space", "Alt", "ln", "Control"
         ];
             
         } else {
@@ -56,7 +58,7 @@ const Keyboard = {
         'Tab', "q", "w", "e", "r", "t", "y", "u", "i", "o", "p", "[", "]", "\\", 'Delete',
         'CapsLock', "a", "s", "d", "f", "g", "h", "j", "k", "l", ";", "'", 'Enter',
         "Shift", "z", "x", "c", "v", "b", "n", "m", ",", ".", "/", "ShiftRt",
-        "Control", "fn", "Alt", "Space", "Alt", "fn", "Control"
+        "Control", "ln", "Alt", "Space", "Alt", "ln", "Control"
         ];
         }
         
@@ -72,7 +74,6 @@ const Keyboard = {
                     keyElement.classList.add("keyboard__key--wide");
                     keyElement.addEventListener("click", () => {
                         this.elements.textArea.value = this.properties.value.slice(0,- 1);
-                        console.log(this.elements.textArea.value);
                         this.properties.value = this.elements.textArea.value;
                     });
                     break;
@@ -98,6 +99,13 @@ const Keyboard = {
                         keyElement.classList.toggle("keyboard__key--active", this.properties.capsLock);
                     });
                     break;
+
+                    case "ln":
+                        keyElement.addEventListener("click", () => {
+                            this.toggleLanguage()
+                        });
+                        break;
+
                 default:
                     keyElement.addEventListener("click", () => {
                         this.properties.value += this.properties.capsLock ? key.toUpperCase() : key.toLowerCase();
@@ -122,9 +130,56 @@ const Keyboard = {
             }
         }
     },
+
+    toggleLanguage() {
+        if (this.properties.language == "english") {
+        this._removeMain();
+        this.init('russian');
+        this.properties.language = "russian";
+        this.elements.textArea.value = this.properties.value;
+        } else {
+        this._removeMain();
+        this.init('english');
+        this.properties.language = "english";
+        this.elements.textArea.value = this.properties.value; 
+        }
+    },
+
+    addEventListnerKeybord() {
+        document.addEventListener('keydown', (event) => this._keyDownHendler(event));
+        document.addEventListener('keyup', (event) => this._keyUpHendler(event));
+    },
+
+    _keyDownHendler(event) {
+        event.preventDefault();
+        let eventclick = new Event ("click");
+        const keybordCharCods = [192, 49, 50, 51, 52, 53, 54, 55, 56, 57, 48, 189, 187,
+        8, 9, 81, 87, 69, 82, 84, 89, 85, 73, 79, 80, 219, 221, 220, 46, 20, 65, 83, 68, 70,
+        71, 72, 74, 75, 76, 186, 222, 13, 16, 90, 88, 67, 86, 66, 78, 77, 188, 190, 191, 16, 17, 18, 32];
+        let arrKeysKeyboard = [...document.querySelectorAll('.keyboard__key')];
+        let indexKeyPresed = keybordCharCods.indexOf(event.keyCode);
+        if (event.keyCode == 20) {arrKeysKeyboard[indexKeyPresed].classList.toggle('keyboard__key--active');
+        arrKeysKeyboard[indexKeyPresed].dispatchEvent(eventclick);}
+        else {
+        arrKeysKeyboard[indexKeyPresed].dispatchEvent(eventclick);
+        arrKeysKeyboard[indexKeyPresed].classList.add('keyboard__key--active');
+        }
+    },
+
+    _keyUpHendler(event) {
+        event.preventDefault();
+        const keybordCharCods = [192, 49, 50, 51, 52, 53, 54, 55, 56, 57, 48, 189, 187,
+        8, 9, 81, 87, 69, 82, 84, 89, 85, 73, 79, 80, 219, 221, 220, 46, 20, 65, 83, 68, 70,
+        71, 72, 74, 75, 76, 186, 222, 13, 16, 90, 88, 67, 86, 66, 78, 77, 188, 190, 191, 16, 17, 18, 32];
+        let arrKeysKeyboard = [...document.querySelectorAll('.keyboard__key')];
+        let indexKeyPresed = keybordCharCods.indexOf(event.keyCode);
+        if (event.keyCode == 20) {}
+        else {
+        arrKeysKeyboard[indexKeyPresed].classList.remove('keyboard__key--active');}
+    },
 };
 
 window.addEventListener("DOMContentLoaded", function () {
     Keyboard.init();
+    Keyboard.addEventListnerKeybord();
 });
-
