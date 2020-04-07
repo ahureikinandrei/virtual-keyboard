@@ -222,12 +222,16 @@ const Keyboard = {
         if (event.keyCode == 20) {arrKeysKeyboard[indexKeyPresed].classList.toggle('keyboard__key--active');
         arrKeysKeyboard[indexKeyPresed].dispatchEvent(eventclick);}
         else if (indexKeyPresed == -1) {}
-        else if (event.keyCode == 16) { if (event.repeat) {} else {
+        else if (event.keyCode == 16) { 
+            if (event.repeat) {} else {
             arrKeysKeyboard[indexKeyPresed].dispatchEvent(eventmousedown);
             arrKeysKeyboard[indexKeyPresed].classList.add('keyboard__key--active');}
         }
-        else if (event.keyCode == 17) {this.properties.ctrl = true;}
-        else if (event.keyCode == 18) { (this.properties.ctrl == true) ? this.toggleLanguage(): this.properties.ctrl = true;}
+        else if (event.keyCode == 17) { this.properties.ctrl = true;
+            arrKeysKeyboard[indexKeyPresed].classList.add('keyboard__key--active')
+        }
+        else if (event.keyCode == 18) { arrKeysKeyboard[indexKeyPresed].classList.add('keyboard__key--active');
+        (this.properties.ctrl == true) ? this.toggleLanguage(): this.properties.ctrl = false;}
         else {
         arrKeysKeyboard[indexKeyPresed].dispatchEvent(eventclick);
         arrKeysKeyboard[indexKeyPresed].classList.add('keyboard__key--active');
@@ -248,13 +252,18 @@ const Keyboard = {
             arrKeysKeyboard[indexKeyPresed].dispatchEvent(eventmouseup);
             arrKeysKeyboard[indexKeyPresed].classList.add('keyboard__key--active');   
         }
-        else if (event.keyCode == 17) {this.properties.ctrl = false;}
+        else if (event.keyCode == 17) { this.properties.ctrl = false;
+            arrKeysKeyboard[indexKeyPresed].classList.remove('keyboard__key--active');
+        }
+        else if (event.keyCode == 18) { arrKeysKeyboard[indexKeyPresed].classList.remove('keyboard__key--active');}
         else {
         arrKeysKeyboard[indexKeyPresed].classList.remove('keyboard__key--active');}
     },
 };
 
 window.addEventListener("DOMContentLoaded", function () {
-    Keyboard.init();
+    Keyboard.properties = JSON.parse(window.localStorage.getItem("properties"));
     Keyboard.addEventListnerKeybord();
+    window.localStorage.setItem("properties", JSON.stringify(Keyboard.properties));
+    Keyboard.init();
 });
