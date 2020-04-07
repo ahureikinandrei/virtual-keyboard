@@ -3,7 +3,7 @@ const Keyboard = {
         main: null,
         keysContainer: null,
         textArea: null,
-        keys: []
+        keys: [],
     },
 
     eventHandlers: {
@@ -22,16 +22,21 @@ const Keyboard = {
         this.elements.textArea = document.createElement("textarea");
         this.elements.main = document.createElement("div");
         this.elements.keysContainer = document.createElement("div");
+        this.elements.descriptionContainer = document.createElement("p");
 
         this.elements.textArea.classList.add("use-keyboard-input");
         this.elements.textArea.setAttribute("autofocus","");
         this.elements.main.classList.add("keyboard");
         this.elements.keysContainer.classList.add("keyboard__keys");
+        this.elements.descriptionContainer.classList.add("description");
 
         this.elements.keys = this.elements.keysContainer.querySelectorAll(".keyboard__key");
 
         document.body.appendChild(this.elements.textArea);
+        document.body.appendChild(this.elements.descriptionContainer);
         document.body.appendChild(this.elements.main);
+
+        this.elements.descriptionContainer.innerHTML = "Клавиатура создана в операционной системе Windows. Для переключения языка комбинация: ctrl + alt";
         this.elements.main.appendChild(this.elements.keysContainer);
         this.elements.keysContainer.appendChild(this._createKeys(language));
 
@@ -41,6 +46,7 @@ const Keyboard = {
     },
 
     _removeMain() {
+        this.elements.descriptionContainer.remove();
         this.elements.main.remove();
         this.elements.textArea.remove();
     },
@@ -71,7 +77,6 @@ const Keyboard = {
         "Control", "ln", "Alt", "Space", "Alt", "ln", "Control"
         ];
         }
-        // if (language === 'english')
         else{
             keyLayout = ['`', '1', "2", "3", "4", "5", "6", "7", "8", "9", "0", "-", "=", 'Backspace',
         'Tab', "q", "w", "e", "r", "t", "y", "u", "i", "o", "p", "[", "]", "\\", 'Delete',
