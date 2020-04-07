@@ -13,6 +13,8 @@ const Keyboard = {
     properties: {
         value: "",
         capsLock: false,
+        shift: false,
+        ctrl: false,
         language: "english"
     },
 
@@ -51,9 +53,26 @@ const Keyboard = {
         'CapsLock', "ф", "ы", "в", "а", "п", "р", "о", "л", "д", "ж", "э", 'Enter',
         "Shift", "я", "ч", "с", "м", "и", "т", "ь", "б", "ю", ".", "ShiftRt",
         "Control", "ln", "Alt", "Space", "Alt", "ln", "Control"
+        ];         
+        } 
+        else if (language === 'russianShift'){
+            keyLayout = ['Ё', '!', "\"", "№", ";", "%", ":", "?", "*", "(", ")", "_", "+", 'Backspace',
+        'Tab', "Й", "Ц", "У", "К", "Е", "Н", "Г", "Ш", "Щ", "З", "Х", "Ъ", "\\", 'Delete',
+        'CapsLock', "Ф", "Ы", "В", "А", "П", "Р", "О", "Л", "Д", "Ж", "Э", 'Enter',
+        "Shift", "Я", "Ч", "С", "М", "И", "Т", "Ь", "Б", "Ю", ",", "ShiftRt",
+        "Control", "ln", "Alt", "Space", "Alt", "ln", "Control"
         ];
-            
-        } else {
+        }
+        else if (language === 'englishShift') {
+            keyLayout = ['~', '!', "@", "#", "$", "%", "^", "&", "*", "(", ")", "_", "+", 'Backspace',
+        'Tab', "Q", "W", "E", "R", "T", "Y", "U", "I", "O", "P", "{", "}", "|", 'Delete',
+        'CapsLock', "A", "S", "D", "F", "G", "H", "J", "K", "L", ":", "\"", 'Enter',
+        "Shift", "Z", "X", "C", "V", "B", "N", "M", "<", ">", "?", "ShiftRt",
+        "Control", "ln", "Alt", "Space", "Alt", "ln", "Control"
+        ];
+        }
+        // if (language === 'english')
+        else{
             keyLayout = ['`', '1', "2", "3", "4", "5", "6", "7", "8", "9", "0", "-", "=", 'Backspace',
         'Tab', "q", "w", "e", "r", "t", "y", "u", "i", "o", "p", "[", "]", "\\", 'Delete',
         'CapsLock', "a", "s", "d", "f", "g", "h", "j", "k", "l", ";", "'", 'Enter',
@@ -70,6 +89,17 @@ const Keyboard = {
             keyElement.textContent = key;
             
             switch (key) {
+                case "Tab":
+                    keyElement.addEventListener("click", () => {
+                        this.elements.textArea.value += "   ";
+                    });
+                    break;
+                case "Delete":
+                    keyElement.addEventListener("click", () => {
+                        this.elements.textArea.value = this.properties.value.slice(0,- 1);
+                        this.properties.value = this.elements.textArea.value;
+                    });
+                    break;
                 case "Backspace":
                     keyElement.classList.add("keyboard__key--wide");
                     keyElement.addEventListener("click", () => {
@@ -83,6 +113,20 @@ const Keyboard = {
                         this.elements.textArea.value += "\n";
                     });
                     break;
+                case "Shift":
+                    keyElement.classList.add("keyboard__key--wide");
+                    keyElement.addEventListener("mousedown", () => {
+                        this. _toggleShift();
+                        this.toggleLanguage();
+                    });
+                    keyElement.addEventListener("mouseup", () => {
+                        this. _toggleShift();
+                        this.toggleLanguage();
+                    });
+                    break;
+                case "ShiftRt":
+                    keyElement.classList.add("keyboard__key--wide");    
+                     break;
                 case "Space":
                     keyElement.classList.add("keyboard__key--extra-wide");
                     keyElement.addEventListener("click", () => {
@@ -99,13 +143,14 @@ const Keyboard = {
                         keyElement.classList.toggle("keyboard__key--active", this.properties.capsLock);
                     });
                     break;
-
-                    case "ln":
+                case "Alt":
+                    keyElement.classList.add("keyboard__key--wide");
+                    break;
+                case "ln":
                         keyElement.addEventListener("click", () => {
-                            this.toggleLanguage()
+                            this.toggleLanguage();
                         });
                         break;
-
                 default:
                     keyElement.addEventListener("click", () => {
                         this.properties.value += this.properties.capsLock ? key.toUpperCase() : key.toLowerCase();
@@ -123,25 +168,35 @@ const Keyboard = {
 
     _toggleCapsLock() {
         this.properties.capsLock = !this.properties.capsLock;
+    },
 
-        for (const key of this.elements.keys) {
-            if (key.childElementCount === 0) {
-                key.textContent = this.properties.capsLock ? key.textContent.toUpperCase() : key.textContent.toLowerCase();
-            }
-        }
+    _toggleShift() {
+        this.properties.shift = !this.properties.shift;
     },
 
     toggleLanguage() {
-        if (this.properties.language == "english") {
+        if (this.properties.language == "english" && !this.properties.shift) {
         this._removeMain();
         this.init('russian');
         this.properties.language = "russian";
         this.elements.textArea.value = this.properties.value;
-        } else {
+        } else if(this.properties.language == "russian" && !this.properties.shift) {
         this._removeMain();
         this.init('english');
         this.properties.language = "english";
         this.elements.textArea.value = this.properties.value; 
+        }
+        else if (this.properties.language == "english" && this.properties.shift){
+        this._removeMain();
+        this.init('englishShift');
+        this.properties.language = "russian";
+        this.elements.textArea.value = this.properties.value;
+        }
+        else if (this.properties.language == "russian" && this.properties.shift){
+        this._removeMain();
+        this.init('russianShift');
+        this.properties.language = "russian";
+        this.elements.textArea.value = this.properties.value;
         }
     },
 
@@ -153,13 +208,21 @@ const Keyboard = {
     _keyDownHendler(event) {
         event.preventDefault();
         let eventclick = new Event ("click");
+        let eventmousedown = new Event ("mousedown");
         const keybordCharCods = [192, 49, 50, 51, 52, 53, 54, 55, 56, 57, 48, 189, 187,
         8, 9, 81, 87, 69, 82, 84, 89, 85, 73, 79, 80, 219, 221, 220, 46, 20, 65, 83, 68, 70,
-        71, 72, 74, 75, 76, 186, 222, 13, 16, 90, 88, 67, 86, 66, 78, 77, 188, 190, 191, 16, 17, 18, 32];
+        71, 72, 74, 75, 76, 186, 222, 13, 16, 90, 88, 67, 86, 66, 78, 77, 188, 190, 191, 16, 17, 0, 18, 32];
         let arrKeysKeyboard = [...document.querySelectorAll('.keyboard__key')];
         let indexKeyPresed = keybordCharCods.indexOf(event.keyCode);
         if (event.keyCode == 20) {arrKeysKeyboard[indexKeyPresed].classList.toggle('keyboard__key--active');
         arrKeysKeyboard[indexKeyPresed].dispatchEvent(eventclick);}
+        else if (indexKeyPresed == -1) {}
+        else if (event.keyCode == 16) { if (event.repeat) {} else {
+            arrKeysKeyboard[indexKeyPresed].dispatchEvent(eventmousedown);
+            arrKeysKeyboard[indexKeyPresed].classList.add('keyboard__key--active');}
+        }
+        else if (event.keyCode == 17) {this.properties.ctrl = true;}
+        else if (event.keyCode == 18) { (this.properties.ctrl == true) ? this.toggleLanguage(): this.properties.ctrl = true;}
         else {
         arrKeysKeyboard[indexKeyPresed].dispatchEvent(eventclick);
         arrKeysKeyboard[indexKeyPresed].classList.add('keyboard__key--active');
@@ -168,12 +231,19 @@ const Keyboard = {
 
     _keyUpHendler(event) {
         event.preventDefault();
+        let eventmouseup = new Event ("mouseup");
         const keybordCharCods = [192, 49, 50, 51, 52, 53, 54, 55, 56, 57, 48, 189, 187,
         8, 9, 81, 87, 69, 82, 84, 89, 85, 73, 79, 80, 219, 221, 220, 46, 20, 65, 83, 68, 70,
-        71, 72, 74, 75, 76, 186, 222, 13, 16, 90, 88, 67, 86, 66, 78, 77, 188, 190, 191, 16, 17, 18, 32];
+        71, 72, 74, 75, 76, 186, 222, 13, 16, 90, 88, 67, 86, 66, 78, 77, 188, 190, 191, 16, 17, 0, 18, 32];
         let arrKeysKeyboard = [...document.querySelectorAll('.keyboard__key')];
         let indexKeyPresed = keybordCharCods.indexOf(event.keyCode);
         if (event.keyCode == 20) {}
+        else if (indexKeyPresed == -1) {}
+        else if (event.keyCode == 16) {
+            arrKeysKeyboard[indexKeyPresed].dispatchEvent(eventmouseup);
+            arrKeysKeyboard[indexKeyPresed].classList.add('keyboard__key--active');   
+        }
+        else if (event.keyCode == 17) {this.properties.ctrl = false;}
         else {
         arrKeysKeyboard[indexKeyPresed].classList.remove('keyboard__key--active');}
     },
