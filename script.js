@@ -262,8 +262,6 @@ const Keyboard = {
 };
 
 window.addEventListener("DOMContentLoaded", function () {
-    Keyboard.properties = JSON.parse(window.localStorage.getItem("properties"));
     Keyboard.addEventListnerKeybord();
-    window.localStorage.setItem("properties", JSON.stringify(Keyboard.properties));
     Keyboard.init();
 });
