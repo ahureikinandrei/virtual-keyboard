@@ -57,38 +57,38 @@ const Keyboard = {
             keyLayout = ['ё', '1', "2", "3", "4", "5", "6", "7", "8", "9", "0", "-", "=", 'Backspace',
         'Tab', "й", "ц", "у", "к", "е", "н", "г", "ш", "щ", "з", "х", "ъ", "\\", 'Delete',
         'CapsLock', "ф", "ы", "в", "а", "п", "р", "о", "л", "д", "ж", "э", 'Enter',
-        "Shift", "я", "ч", "с", "м", "и", "т", "ь", "б", "ю", ".", "ShiftRt",
-        "Control", "ln", "Alt", "Space", "Alt", "ln", "Control"
+        "Shift", "я", "ч", "с", "м", "и", "т", "ь", "б", "ю", ".", "ShiftRt","▲",
+        "Control", "ln", "Alt", "Space", "Alt", "ln", "Control","◄", "▼", "►"
         ];         
         } 
         else if (language === 'russianShift'){
             keyLayout = ['Ё', '!', "\"", "№", ";", "%", ":", "?", "*", "(", ")", "_", "+", 'Backspace',
         'Tab', "Й", "Ц", "У", "К", "Е", "Н", "Г", "Ш", "Щ", "З", "Х", "Ъ", "\\", 'Delete',
         'CapsLock', "Ф", "Ы", "В", "А", "П", "Р", "О", "Л", "Д", "Ж", "Э", 'Enter',
-        "Shift", "Я", "Ч", "С", "М", "И", "Т", "Ь", "Б", "Ю", ",", "ShiftRt",
-        "Control", "ln", "Alt", "Space", "Alt", "ln", "Control"
+        "Shift", "Я", "Ч", "С", "М", "И", "Т", "Ь", "Б", "Ю", ",", "ShiftRt","▲",
+        "Control", "ln", "Alt", "Space", "Alt", "ln", "Control","◄", "▼", "►"
         ];
         }
         else if (language === 'englishShift') {
             keyLayout = ['~', '!', "@", "#", "$", "%", "^", "&", "*", "(", ")", "_", "+", 'Backspace',
         'Tab', "Q", "W", "E", "R", "T", "Y", "U", "I", "O", "P", "{", "}", "|", 'Delete',
         'CapsLock', "A", "S", "D", "F", "G", "H", "J", "K", "L", ":", "\"", 'Enter',
-        "Shift", "Z", "X", "C", "V", "B", "N", "M", "<", ">", "?", "ShiftRt",
-        "Control", "ln", "Alt", "Space", "Alt", "ln", "Control"
+        "Shift", "Z", "X", "C", "V", "B", "N", "M", "<", ">", "?", "ShiftRt","▲",
+        "Control", "ln", "Alt", "Space", "Alt", "ln", "Control","◄", "▼", "►"
         ];
         }
         else{
             keyLayout = ['`', '1', "2", "3", "4", "5", "6", "7", "8", "9", "0", "-", "=", 'Backspace',
         'Tab', "q", "w", "e", "r", "t", "y", "u", "i", "o", "p", "[", "]", "\\", 'Delete',
         'CapsLock', "a", "s", "d", "f", "g", "h", "j", "k", "l", ";", "'", 'Enter',
-        "Shift", "z", "x", "c", "v", "b", "n", "m", ",", ".", "/", "ShiftRt",
-        "Control", "ln", "Alt", "Space", "Alt", "ln", "Control"
+        "Shift", "z", "x", "c", "v", "b", "n", "m", ",", ".", "/", "ShiftRt","▲",
+        "Control", "ln", "Alt", "Space", "Alt", "ln", "Control","◄", "▼", "►"
         ];
         }
         
         keyLayout.forEach(key => { 
             const keyElement = document.createElement("button");
-            const insertLineBreak = ["Backspace", "Delete", "Enter", "ShiftRt"].indexOf(key) !== -1;
+            const insertLineBreak = ["Backspace", "Delete", "Enter", "▲"].indexOf(key) !== -1;
             keyElement.setAttribute("type", "button");
             keyElement.classList.add("keyboard__key");
             keyElement.textContent = key;
@@ -216,18 +216,22 @@ const Keyboard = {
         let eventmousedown = new Event ("mousedown");
         const keybordCharCods = [192, 49, 50, 51, 52, 53, 54, 55, 56, 57, 48, 189, 187,
         8, 9, 81, 87, 69, 82, 84, 89, 85, 73, 79, 80, 219, 221, 220, 46, 20, 65, 83, 68, 70,
-        71, 72, 74, 75, 76, 186, 222, 13, 16, 90, 88, 67, 86, 66, 78, 77, 188, 190, 191, 16, 17, 0, 18, 32];
+        71, 72, 74, 75, 76, 186, 222, 13, 16, 90, 88, 67, 86, 66, 78, 77, 188, 190, 191, 16, 38, 17, 0, 18, 32, 0, 0, 0, 37, 40, 39];
         let arrKeysKeyboard = [...document.querySelectorAll('.keyboard__key')];
         let indexKeyPresed = keybordCharCods.indexOf(event.keyCode);
         if (event.keyCode == 20) {arrKeysKeyboard[indexKeyPresed].classList.toggle('keyboard__key--active');
         arrKeysKeyboard[indexKeyPresed].dispatchEvent(eventclick);}
         else if (indexKeyPresed == -1) {}
-        else if (event.keyCode == 16) { if (event.repeat) {} else {
+        else if (event.keyCode == 16) { 
+            if (event.repeat) {} else {
             arrKeysKeyboard[indexKeyPresed].dispatchEvent(eventmousedown);
             arrKeysKeyboard[indexKeyPresed].classList.add('keyboard__key--active');}
         }
-        else if (event.keyCode == 17) {this.properties.ctrl = true;}
-        else if (event.keyCode == 18) { (this.properties.ctrl == true) ? this.toggleLanguage(): this.properties.ctrl = true;}
+        else if (event.keyCode == 17) { this.properties.ctrl = true;
+            arrKeysKeyboard[indexKeyPresed].classList.add('keyboard__key--active')
+        }
+        else if (event.keyCode == 18) { arrKeysKeyboard[indexKeyPresed].classList.add('keyboard__key--active');
+        (this.properties.ctrl == true) ? this.toggleLanguage(): this.properties.ctrl = false;}
         else {
         arrKeysKeyboard[indexKeyPresed].dispatchEvent(eventclick);
         arrKeysKeyboard[indexKeyPresed].classList.add('keyboard__key--active');
@@ -239,7 +243,7 @@ const Keyboard = {
         let eventmouseup = new Event ("mouseup");
         const keybordCharCods = [192, 49, 50, 51, 52, 53, 54, 55, 56, 57, 48, 189, 187,
         8, 9, 81, 87, 69, 82, 84, 89, 85, 73, 79, 80, 219, 221, 220, 46, 20, 65, 83, 68, 70,
-        71, 72, 74, 75, 76, 186, 222, 13, 16, 90, 88, 67, 86, 66, 78, 77, 188, 190, 191, 16, 17, 0, 18, 32];
+        71, 72, 74, 75, 76, 186, 222, 13, 16, 90, 88, 67, 86, 66, 78, 77, 188, 190, 191, 16, 38, 17, 0, 18, 32, 0, 0, 0, 37, 40, 39];
         let arrKeysKeyboard = [...document.querySelectorAll('.keyboard__key')];
         let indexKeyPresed = keybordCharCods.indexOf(event.keyCode);
         if (event.keyCode == 20) {}
@@ -248,13 +252,18 @@ const Keyboard = {
             arrKeysKeyboard[indexKeyPresed].dispatchEvent(eventmouseup);
             arrKeysKeyboard[indexKeyPresed].classList.add('keyboard__key--active');   
         }
-        else if (event.keyCode == 17) {this.properties.ctrl = false;}
+        else if (event.keyCode == 17) { this.properties.ctrl = false;
+            arrKeysKeyboard[indexKeyPresed].classList.remove('keyboard__key--active');
+        }
+        else if (event.keyCode == 18) { arrKeysKeyboard[indexKeyPresed].classList.remove('keyboard__key--active');}
         else {
         arrKeysKeyboard[indexKeyPresed].classList.remove('keyboard__key--active');}
     },
 };
 
 window.addEventListener("DOMContentLoaded", function () {
-    Keyboard.init();
+    Keyboard.properties = JSON.parse(window.localStorage.getItem("properties"));
     Keyboard.addEventListnerKeybord();
+    window.localStorage.setItem("properties", JSON.stringify(Keyboard.properties));
+    Keyboard.init();
 });
