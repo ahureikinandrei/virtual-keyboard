@@ -6,10 +6,6 @@ const Keyboard = {
         keys: [],
     },
 
-    eventHandlers: {
-        oninput: null
-    },
-
     properties: {
         value: "",
         capsLock: false,

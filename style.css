@@ -22,6 +22,7 @@
 }
 
 .keyboard__key {
+    position: relative;
     height: 45px;
     width: 6%;
     max-width: 90px;
@@ -38,7 +39,7 @@
     justify-content: center;
     vertical-align: top;
     padding: 0;
-    position: relative;
+   
 }
 
 .keyboard__key:active {
