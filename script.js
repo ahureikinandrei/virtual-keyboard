@@ -216,7 +216,7 @@ const Keyboard = {
         document.addEventListener('keyup', (event) => this._keyUpHendler(event));
     },
 
-    _keyDownHendler(event) {
+    _keyDownHendler({keyCode}) {
         event.preventDefault();
         const eventclick = new Event ("click");
         const eventmousedown = new Event ("mousedown");
@@ -224,24 +224,24 @@ const Keyboard = {
         8, 9, 81, 87, 69, 82, 84, 89, 85, 73, 79, 80, 219, 221, 220, 46, 20, 65, 83, 68, 70,
         71, 72, 74, 75, 76, 186, 222, 13, 16, 90, 88, 67, 86, 66, 78, 77, 188, 190, 191, 16, 38, 17, 0, 18, 32, 0, 0, 0, 37, 40, 39];
         let arrKeysKeyboard = [...document.querySelectorAll('.keyboard__key')];
-        let indexKeyPresed = keybordCharCods.indexOf(event.keyCode);
+        let indexKeyPresed = keybordCharCods.indexOf(keyCode);
         if (event.keyCode == 20) {arrKeysKeyboard[indexKeyPresed].classList.toggle('keyboard__key--active');
         arrKeysKeyboard[indexKeyPresed].dispatchEvent(eventclick);}
 
         else if (indexKeyPresed == -1) {}
 
-        else if (event.keyCode == 16) { 
+        else if (keyCode == 16) { 
             if (!event.repeat) {
             arrKeysKeyboard[indexKeyPresed].dispatchEvent(eventmousedown);
             arrKeysKeyboard[indexKeyPresed].classList.add('keyboard__key--active');}
         }
 
-        else if (event.keyCode == 17) {
+        else if (keyCode == 17) {
              this.properties.ctrl = true;
             arrKeysKeyboard[indexKeyPresed].classList.add('keyboard__key--active')
         }
 
-        else if (event.keyCode == 18) { 
+        else if (keyCode == 18) { 
             arrKeysKeyboard[indexKeyPresed].classList.add('keyboard__key--active');
         (this.properties.ctrl == true) ? this.toggleLanguage(): this.properties.ctrl = false;
         }
@@ -252,24 +252,24 @@ const Keyboard = {
         }
     },
 
-    _keyUpHendler(event) {
+    _keyUpHendler({keyCode}) {
         event.preventDefault();
         const eventmouseup = new Event ("mouseup");
         const keybordCharCods = [192, 49, 50, 51, 52, 53, 54, 55, 56, 57, 48, 189, 187,
         8, 9, 81, 87, 69, 82, 84, 89, 85, 73, 79, 80, 219, 221, 220, 46, 20, 65, 83, 68, 70,
         71, 72, 74, 75, 76, 186, 222, 13, 16, 90, 88, 67, 86, 66, 78, 77, 188, 190, 191, 16, 38, 17, 0, 18, 32, 0, 0, 0, 37, 40, 39];
         let arrKeysKeyboard = [...document.querySelectorAll('.keyboard__key')];
-        let indexKeyPresed = keybordCharCods.indexOf(event.keyCode);
-        if (event.keyCode == 20) {}
+        let indexKeyPresed = keybordCharCods.indexOf(keyCode);
+        if (keyCode == 20) {}
         else if (indexKeyPresed == -1) {}
-        else if (event.keyCode == 16) {
+        else if (keyCode == 16) {
             arrKeysKeyboard[indexKeyPresed].dispatchEvent(eventmouseup);
             arrKeysKeyboard[indexKeyPresed].classList.add('keyboard__key--active');   
         }
-        else if (event.keyCode == 17) { this.properties.ctrl = false;
+        else if (keyCode == 17) { this.properties.ctrl = false;
             arrKeysKeyboard[indexKeyPresed].classList.remove('keyboard__key--active');
         }
-        else if (event.keyCode == 18) { 
+        else if (keyCode == 18) { 
             arrKeysKeyboard[indexKeyPresed].classList.remove('keyboard__key--active');
         }
         else {
